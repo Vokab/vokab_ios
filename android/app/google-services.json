@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "28933578874",
+    "project_id": "vokab-52dd5",
+    "storage_bucket": "vokab-52dd5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28933578874:android:2aa46a3d3afe98f3761bc3",
+        "android_client_info": {
+          "package_name": "com.vokab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "28933578874-sg7tko4d92kekut3v1shhmqgoa1s6e5n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQOSgvqwDJC7h0_YCEfZxPB6Jal2hD8Vk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "28933578874-sg7tko4d92kekut3v1shhmqgoa1s6e5n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
