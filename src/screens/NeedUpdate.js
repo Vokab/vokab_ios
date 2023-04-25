@@ -17,11 +17,11 @@ const NeedUpdate = () => {
         <Text
           style={{
             color: '#fff',
-            fontSize: 36,
+            fontSize: 30,
             fontFamily: FONTS.enFontFamilyBold,
             textAlign: 'center',
           }}>
-          Thanks to update the app
+          Thanks to update the app from the store
         </Text>
       </View>
     </ScrollView>

@@ -18,6 +18,7 @@
 		7699B88040F8A987B510C191 /* libPods-vokab-vokabTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-vokab-vokabTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		82E5D4B8C0B94C1AAB4DB997 /* Nunito-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F696226BBE8F4CF2A5F3BB94 /* Nunito-Medium.ttf */; };
+		844518C029EE2413000EC9D9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 844518BF29EE2413000EC9D9 /* StoreKit.framework */; };
 		8459D85529E8762100D4A80F /* correct.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8459D85429E8762000D4A80F /* correct.mp3 */; };
 		8459D85729E8762E00D4A80F /* wrong.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8459D85629E8762D00D4A80F /* wrong.mp3 */; };
 		F03DE582D9384A6382558F3C /* Nunito-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B13F98F6F64D4555ABB25B45 /* Nunito-SemiBold.ttf */; };
@@ -50,6 +51,8 @@
 		5B7EB9410499542E8C5724F5 /* Pods-vokab-vokabTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-vokab-vokabTests.debug.xcconfig"; path = "Target Support Files/Pods-vokab-vokabTests/Pods-vokab-vokabTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-vokab.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-vokab.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = vokab/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		840B8D4A29EE436C005A080C /* TestIap.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestIap.storekit; sourceTree = "<group>"; };
+		844518BF29EE2413000EC9D9 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		8459D84729E871DC00D4A80F /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		8459D84829E871DC00D4A80F /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		8459D84929E871DD00D4A80F /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -87,6 +90,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-vokab.a in Frameworks */,
+				844518C029EE2413000EC9D9 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +131,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				844518BF29EE2413000EC9D9 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-vokab.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-vokab-vokabTests.a */,
@@ -156,6 +161,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				840B8D4A29EE436C005A080C /* TestIap.storekit */,
 				8459D85629E8762D00D4A80F /* wrong.mp3 */,
 				8459D85429E8762000D4A80F /* correct.mp3 */,
 				13B07FAE1A68108700A75B9A /* vokab */,
@@ -569,20 +575,30 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = UM45655NH2;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UM45655NH2;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = vokab/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Vokab;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vokab.vokab;
 				PRODUCT_NAME = vokab;
+				PROVISIONING_PROFILE_SPECIFIER = "Vokab Prof";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Vokab;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -595,19 +611,29 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = UM45655NH2;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UM45655NH2;
 				INFOPLIST_FILE = vokab/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Vokab;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vokab.vokab;
 				PRODUCT_NAME = vokab;
+				PROVISIONING_PROFILE_SPECIFIER = "Vokab Prof";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Vokab;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -2,21 +2,36 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {COLORS_THEME, FONTS} from '../../../constants';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Loop} from '../../../realm/models/Loop';
 import {RealmContext} from '../../../realm/models';
+import {languages} from '../../../../languages';
+import {useNavigation} from '@react-navigation/native';
 
 const {useQuery, useRealm} = RealmContext;
 
-const DayCard = ({alreadyPassed, isDailyTest}) => {
+const DayCard = ({alreadyPassed, isDailyTest, userUiLang}) => {
   const loop = useQuery(Loop);
   const isThisDayPassed = alreadyPassed;
+  const navigation = useNavigation();
 
+  const goToLoop = () => {
+    navigation.navigate('Loop', {
+      idType: 3,
+    });
+  };
   return (
     <View style={[styles.container, {height: !isThisDayPassed ? 150 : null}]}>
       {isThisDayPassed ? (
         <View style={styles.titleWrapper}>
+          {/* <FontAwesome5
+            name={'check-circle'}
+            size={40}
+            color="#fff"
+            style={{marginBottom: 20}}
+          /> */}
           <Text style={styles.title}>
-            Congratulation you finished this day words
+            {languages[userUiLang].home.dayFinished}
           </Text>
           {isDailyTest && (
             <View style={styles.buttonWrapper}>
@@ -29,7 +44,12 @@ const DayCard = ({alreadyPassed, isDailyTest}) => {
                   goToLoop();
                 }}>
                 <Text style={styles.buttonTxtStyle}>
-                  {loop[0].stepOfDailyTest === 0 ? 'Test' : 'Continue'}
+                  {loop[0].stepOfDailyTest === 0
+                    ? `${languages[userUiLang].home.test}`
+                    : loop[0].weeklyTestRoad.length === 0
+                    ? `${languages[userUiLang].finished}`
+                    : `${languages[userUiLang].continue}`}
+                  {/* {loop[0].stepOfDailyTest === 0 ? 'Test' : 'Continue'} */}
                 </Text>
               </TouchableOpacity>
             </View>

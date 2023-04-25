@@ -156,7 +156,7 @@ const Discover = props => {
         });
       }
     } else {
-      loopExit().then(navigation.navigate('Home'));
+      loopExit().then(navigation.navigate('Congratulation'));
     }
   };
   useEffect(() => {
@@ -228,7 +228,7 @@ const Discover = props => {
         </View>
         {loopRoad[loopStep].wordObj.wordType === 0 && (
           <View style={styles.foreignSpellingBox}>
-            <Text style={styles.foreignSpellingTxt}>/ˈaɣja̝/</Text>
+            <Text style={styles.foreignSpellingTxt}>{loopRoad[loopStep].wordObj.wordLearnedPhonetic}</Text>
             <TouchableOpacity
               onPress={() => {
                 if (loopType === 0) {
@@ -237,6 +237,29 @@ const Discover = props => {
               }}>
               <Icon name="speaker" size={35} color="#FF4C00" />
             </TouchableOpacity>
+          </View>
+        )}
+                {loopRoad[loopStep].wordObj.wordType === 1 && isSubed && (
+          <View style={{paddingHorizontal: 10, flexDirection: 'row'}}>
+            {loopRoad[loopStep].wordObj.wordLearnedExample
+              .split(' ')
+              .map((item, index) => {
+                return (
+                  <Text
+                    style={[
+                      styles.nativeExampleTxt,
+                      {
+                        color:
+                          index === loopRoad[loopStep].wordObj.exampleWordIndex
+                            ? COLORS_THEME.primary
+                            : '#fff',
+                      },
+                    ]}>
+                    {item}
+                  </Text>
+                );
+              })}
+            {/* {loopRoad[loopStep].wordObj.exampleWordIndex} */}
           </View>
         )}
       </View>

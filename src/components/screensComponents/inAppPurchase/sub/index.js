@@ -1,34 +1,80 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
-import React from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, Image, Alert} from 'react-native';
+import React, { useEffect } from 'react';
 import {COLORS_THEME, FONTS, SIZES} from '../../../../constants';
-import {requestSubscription} from 'react-native-iap';
+import {requestSubscription,clearProductsIOS,clearTransactionIOS} from 'react-native-iap';
+import { RealmContext } from '../../../../realm/models';
+import { User } from '../../../../realm/models/User';
 
-const Subs = ({sku, period, price, subscriptionOfferDetails, subElement}) => {
+const {useQuery, useObject, useRealm} = RealmContext;
+
+const Subs = ({sku,  subscriptionOfferDetails, subElement}) => {
+  const user = useQuery(User);
+  useEffect(()=>{
+    console.log('subscriptionOfferDetails =>',subscriptionOfferDetails)
+    console.log('subElement =>',subElement)
+
+
+
+  },[])
   return (
     <View>
-      {subElement.subscriptionOfferDetails.map((offer, index) => (
+     
         <TouchableOpacity
-          style={[styles.planBox, styles.planSelected]}
-          key={index}
-          onPress={() =>
-            requestSubscription({
-              subscriptionOffers: [
-                {sku: subElement.productId, offerToken: offer.offerToken},
-              ],
-            })
+          style={[styles.planBox, sku === 'vokab_plus_1y' && styles.planSelected]}
+
+          onPress={async  () =>{
+         try{
+          if (user[0].isPremium ){
+            Alert.alert('You are already a premium user')
+          } else{
+            let sku = subElement.productId
+            //await clearTransactionIOS();
+            await requestSubscription({sku})
+          }
+      
+         }catch (err) {
+          console.warn(err.code, err.message);
+        }
+            
+          }
+         
           }>
-          <View style={styles.absoBox}>
-            <Text style={styles.absoBoxTxt}>save 60%</Text>
-          </View>
-          <View style={styles.planBoxFst}>
-            <Text style={styles.planLengthTxt}>1 year plan</Text>
-            <Text style={styles.howMuchTxt}>$48 billed every year</Text>
-          </View>
-          <View style={styles.planBoxScnd}>
-            <Text style={styles.planLengthTxt}>4 /mo</Text>
-          </View>
+{sku === 'vokab_plus_1y' && (
+            <View style={styles.absoBox}>
+              <Text style={styles.absoBoxTxt}>save 60%</Text>
+            </View>
+          )}
+          {sku === 'vokab_plus_1m' ? (
+            <>
+              <View style={styles.planBoxFst}>
+                <Text style={styles.planLengthTxt}>Monthly Plan</Text>
+              </View>
+              <View style={styles.planBoxScnd}>
+                <Text style={styles.planLengthTxt}>$12 /mo</Text>
+              </View>
+            </>
+          ) : sku === 'vokab_plus_1y' ? (
+            <>
+              <View style={styles.planBoxFst}>
+                <Text style={styles.planLengthTxt}>1 year plan</Text>
+   
+              </View>
+              <View style={styles.planBoxScnd}>
+                <Text style={styles.planLengthTxt}>$48 /year</Text>
+              </View>
+            </>
+          ) : sku === 'vokadb_6m' ? (
+            <>
+                  <View style={styles.planBoxFst}>
+                <Text style={styles.planLengthTxt}>Monthly Plan</Text>
+              </View>
+              <View style={styles.planBoxScnd}>
+                <Text style={styles.planLengthTxt}>$12 /month</Text>
+              </View>
+            </>
+          ) : null}
         </TouchableOpacity>
-      ))}
+
     </View>
   );
 };

@@ -170,7 +170,7 @@ const Rehide = props => {
       }
       // Retype screen will never used in the review bag or tests
     } else {
-      loopExit().then(navigation.navigate('Home'));
+      loopExit().then(navigation.navigate('Congratulation'));
     }
   };
   useEffect(() => {

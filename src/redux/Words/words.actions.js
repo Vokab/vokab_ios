@@ -206,7 +206,6 @@ export const getAllTheWords = async level => {
     collection(db, 'words'),
     where('level', '==', level),
     orderBy('id'),
-    limit(20),
   );
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach(doc => {

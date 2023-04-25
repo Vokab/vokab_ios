@@ -21,7 +21,7 @@ const LoopProgBar = props => {
         <View
           style={[
             styles.progressBarChild,
-            {width: (loopStep / loopRoad.length) * 100},
+            {width: `${(loopStep / loopRoad.length) * 100}%`},
           ]}></View>
       </View>
     </View>

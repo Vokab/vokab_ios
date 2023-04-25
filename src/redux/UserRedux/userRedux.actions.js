@@ -42,6 +42,10 @@ export const createAccount =
     userLevel,
     startDate,
     currentDate,
+    isPremium,
+    endedAt,
+    startedAt,
+    type,
   }) =>
   async dispatch => {
     try {
@@ -76,6 +80,12 @@ export const createAccount =
             streaks: 0,
             // subscription: check evrytime app open if isSubed: true && endedAt - new Date() > 0 otherwise remove subscription
             createdAt: timestemps,
+            subscription: {
+              endedAt: endedAt,
+              startedAt: startedAt,
+              isSubed: isPremium,
+              type: type,
+            },
           };
           await setDoc(doc(db, 'users', `${userCredential.user.uid}`), user);
           dispatch({
@@ -151,6 +161,12 @@ export const signUpUser =
             streaks: 0,
             // subscription: check evrytime app open if isSubed: true && endedAt - new Date() > 0 otherwise remove subscription
             createdAt: timestemps,
+            subscription: {
+              endedAt: 0,
+              startedAt: 0,
+              isSubed: false,
+              type: '',
+            },
           };
           await setDoc(doc(db, 'users', `${userCredential.user.uid}`), user);
           dispatch({

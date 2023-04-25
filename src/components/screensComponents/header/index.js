@@ -16,14 +16,14 @@ const ReviewHeader = props => {
       <View style={[styles.reviewHeaderBox, styles.headerBox]}>
         <Text style={styles.reviewHeader}>{screenTitle}</Text>
       </View>
-      <View style={[styles.headerIcon, styles.headerBox]}>
+{/*       <View style={[styles.headerIcon, styles.headerBox]}>
         <TouchableOpacity
           onPress={() => {
             reviewExplinationModal();
           }}>
           <AntDesign name="exclamationcircleo" size={20} color="#fff" />
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -32,7 +32,7 @@ export default ReviewHeader;
 
 const styles = StyleSheet.create({
   headerBox: {
-    width: '33.3333333%',
+    width: '100%',
   },
   headerIcon: {alignItems: 'flex-end'},
   reviewHeaderBox: {
@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+   
+    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 15,
     paddingHorizontal: 15,

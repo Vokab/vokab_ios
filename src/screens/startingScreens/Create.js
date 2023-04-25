@@ -63,7 +63,11 @@ const Create = ({route, navigation}) => {
   const userLevel = users[0].userLevel;
   const startDate = users[0].startDate;
   const currentDate = users[0].currentDate;
-
+  const isPremium = users[0].isPremium;
+  const endedAt = users[0].endedAt;
+  const startedAt = users[0].startedAt;
+  const type = users[0].type;
+  
   const [error, setError] = useState('');
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -113,6 +117,10 @@ const Create = ({route, navigation}) => {
               userLevel,
               startDate,
               currentDate,
+              isPremium,
+              endedAt,
+              startedAt,
+              type,
             }),
           );
           // alert('Hamdulh User Sign Up Successfully');

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS_THEME, FONTS, SIZES} from '../../../../constants';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import English from '../../../../../assets/1.png';
 import Arabic from '../../../../../assets/0.png';
 import French from '../../../../../assets/2.png';
@@ -20,6 +21,8 @@ import Portugais from '../../../../../assets/6.png';
 import {RealmContext} from '../../../../realm/models';
 import {User} from '../../../../realm/models/User';
 import {languages} from '../../../../../languages';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 const {useQuery, useObject, useRealm} = RealmContext;
 
 const ChangeUiLang = props => {
@@ -45,14 +48,14 @@ const ChangeUiLang = props => {
       flag: French,
     },
     {
-      id: 4,
+      id: 3,
       lang: languages[userUiLang].settings.languages[3],
-      flag: Italian,
+      flag: German,
     },
     {
-      id: 3,
+      id: 4,
       lang: languages[userUiLang].settings.languages[4],
-      flag: German,
+      flag: Italian,
     },
     {
       id: 5,
@@ -87,6 +90,14 @@ const ChangeUiLang = props => {
       }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+          <View style={{alignItems: 'flex-end'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setUiLangModalVisible(!uiLangModalVisible);
+              }}>
+              <AntDesign name="closecircle" size={20} color={'#fff'} />
+            </TouchableOpacity>
+          </View>
           <ScrollView
             style={styles.listOfWord}
             contentContainerStyle={{
@@ -147,7 +158,7 @@ const ChangeUiLang = props => {
 export default ChangeUiLang;
 
 const styles = StyleSheet.create({
-  langBox: {width: '80%'},
+  langBox: {width: '80%',paddingHorizontal:10},
   langTxt: {
     fontSize: 20,
     fontFamily: FONTS.enFontFamilyBold,
@@ -181,8 +192,7 @@ const styles = StyleSheet.create({
   flagImgStyle: {
     width: '10%',
     height: 25,
-    marginRight: 20,
-    marginLeft: 20,
+ 
   },
   modalTitleTxt: {
     fontSize: 22,

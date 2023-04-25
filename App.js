@@ -24,18 +24,17 @@ import {RealmContext} from './src/realm/models';
 import {User} from './src/realm/models/User';
 import NeedUpdate from './src/screens/NeedUpdate';
 import Create from './src/screens/startingScreens/Create';
-import {
-  initConnection,
-  flushFailedPurchasesCachedAsPendingAndroid,
-  getAvailablePurchases,
-  endConnection,
-} from 'react-native-iap';
+import Congratulation from './src/components/loopComponents/congratulation';
+
+
 
 const {useQuery, useRealm} = RealmContext;
 
 const Stack = createStackNavigator();
 const App = ({isUpdated}) => {
   const users = useQuery(User);
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -59,6 +58,7 @@ const App = ({isUpdated}) => {
               <Stack.Screen name="Loop" component={LoopManager} />
               <Stack.Screen name="settings" component={Settings} />
               <Stack.Screen name="Create" component={Create} />
+              <Stack.Screen name="Congratulation" component={Congratulation} />
             </>
           )
         ) : (

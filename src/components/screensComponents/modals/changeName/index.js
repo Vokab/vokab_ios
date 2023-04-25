@@ -10,10 +10,11 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS_THEME, FONTS, SIZES} from '../../../../constants';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {User} from '../../../../realm/models/User';
 import {RealmContext} from '../../../../realm/models';
 import {languages} from '../../../../../languages';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const {useQuery, useObject, useRealm} = RealmContext;
 
@@ -40,6 +41,14 @@ const ChangeName = props => {
       }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+          <View style={{alignItems: 'flex-end'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setNameModalVisible(!nameModalVisible);
+              }}>
+              <AntDesign name="closecircle" size={20} color={'#fff'} />
+            </TouchableOpacity>
+          </View>
           <ScrollView
             style={styles.listOfWord}
             contentContainerStyle={{
@@ -50,7 +59,7 @@ const ChangeName = props => {
             }}>
             <View style={styles.inputBoxStyle}>
               <View style={styles.iconStyle}>
-                <AntDesign
+                <FontAwesome5
                   name={'user-alt'}
                   size={25}
                   color={'#fff'}

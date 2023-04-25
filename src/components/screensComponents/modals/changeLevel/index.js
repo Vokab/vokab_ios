@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS_THEME, FONTS, SIZES} from '../../../../constants';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import English from '../../../../../assets/1.png';
 import Arabic from '../../../../../assets/0.png';
 import French from '../../../../../assets/2.png';
@@ -20,6 +21,7 @@ import Portugais from '../../../../../assets/6.png';
 import {RealmContext} from '../../../../realm/models';
 import {User} from '../../../../realm/models/User';
 import {languages} from '../../../../../languages';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const {useQuery, useObject, useRealm} = RealmContext;
 
@@ -59,6 +61,14 @@ const ChangeLevel = props => {
       }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+          <View style={{alignItems: 'flex-end'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setLevelModalVisible(!levelModalVisible);
+              }}>
+              <AntDesign name="closecircle" size={20} color={'#fff'} />
+            </TouchableOpacity>
+          </View>
           <ScrollView
             style={styles.listOfWord}
             contentContainerStyle={{

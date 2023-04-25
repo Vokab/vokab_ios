@@ -14,6 +14,7 @@ export const constructDef = async (
   defaultWordsBag,
   isDefaultDiscover,
   defOrCus,
+  isSubed
 ) => {
   console.log('defOrCus', defOrCus);
   console.log('defaultWordsBag', defaultWordsBag);
@@ -30,9 +31,17 @@ export const constructDef = async (
     // screens = [5, 6, 4, 7]; // this is for practice
     // screens = [8, 4, 7, 6]; // this is for master
     // screens = [8, 9, 10, 6];
-    screens = [1, 2, 3, 4];
+    if (defOrCus === 0 && isSubed) {
+      screens = [1, 13, 2, 3, 4];
+    } else {
+      screens = [1, 2, 3, 4];
+    }
   } else if (isDefaultDiscover === 1) {
-    screens = [5, 6, 4, 7];
+    if (defOrCus === 0 && isSubed) {
+      screens = [5, 6, 4, 7, 14];
+    } else {
+      screens = [5, 6, 4, 7];
+    }
   } else if (isDefaultDiscover === 2) {
     if (defOrCus === 0) {
       screens = [8, 9, 10, 6];

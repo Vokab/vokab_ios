@@ -364,7 +364,7 @@ const Cards = props => {
           loop[0].isCustomDiscover = loop[0].isCustomDiscover + 1;
         });
       }
-      loopExit().then(navigation.navigate('Home'));
+      loopExit().then(navigation.navigate('Congratulation'));
     }
   };
 
@@ -584,15 +584,10 @@ const Cards = props => {
                   key={index}
                   style={[styles.blurParrentCard, cardsPos[index]]}
                   onPress={() => toogleSugResp(myCard)}>
-                  <Image
-                    source={ShadowEffect}
-                    style={styles.blurEffectImg}
-                    blurRadius={50}
-                    resizeMode="stretch"
-                  />
+
                   <View style={[styles.cardBtn, backgroundColor]}>
                     <Text style={[styles.checkBtnTxt, styles.cardBtnTxt]}>
-                      {myCard.word}
+                    {myCard.word.replace(/\s+/g, '␣')}
                     </Text>
                   </View>
                 </TouchableOpacity>

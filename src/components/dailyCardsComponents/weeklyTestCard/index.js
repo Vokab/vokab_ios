@@ -2,6 +2,7 @@ import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 import React, {useEffect} from 'react';
 import {COLORS_THEME, FONTS} from '../../../constants';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Tester from '../../../../assets/tester.png';
 import {useNavigation} from '@react-navigation/native';
 import {RealmContext} from '../../../realm/models';
@@ -37,7 +38,9 @@ const WeeklyTestCard = ({isTodayTest}) => {
             {languages[userUiLang].home.weekly_test}
           </Text>
           {isTodayTest ? (
-            <Text style={styles.title}>Test end of the week</Text>
+            <Text style={styles.title}>
+              {languages[userUiLang].home.test_end_week}
+            </Text>
           ) : (
             <Text style={styles.title}>
               {languages[userUiLang].home.complete_all_the_days}

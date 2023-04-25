@@ -24,6 +24,9 @@ export class User extends Realm.Object {
       currentWeek: 'int',
       currentDay: 'int',
       isPremium: 'bool',
+      endedAt: 'int',
+      startedAt: 'int',
+      type: 'string',
       passedDays: 'int[]', // This is used to get the streaks for the profile page // it is an array of integer which each value of day calculated like this : day+month+year
       notifToken: 'string',
       wordsDate: 'int',

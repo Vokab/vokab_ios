@@ -372,7 +372,7 @@ const Hearing = props => {
           loop[0].isCustomDiscover = loop[0].isCustomDiscover + 1;
         });
       }
-      loopExit().then(navigation.navigate('Home'));
+      loopExit().then(navigation.navigate('Congratulation'));
     }
   };
   const fadeIn = () => {
@@ -491,7 +491,7 @@ const Hearing = props => {
           loop[0].isCustomDiscover = loop[0].isCustomDiscover + 1;
         });
       }
-      loopExit().then(navigation.navigate('Home'));
+      loopExit().then(navigation.navigate('Congratulation'));
     }
   };
   return (
@@ -714,7 +714,7 @@ const styles = StyleSheet.create({
   suggCardText: {
     fontFamily: FONTS.enFontFamilyBold,
     color: '#fff',
-    fontSize: 20,
+    fontSize: 16,
   },
   suggCard: {
     width: '40%',

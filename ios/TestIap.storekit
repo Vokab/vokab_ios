@@ -1,0 +1,79 @@
+{
+  "identifier" : "B511D048",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6447775824",
+    "_developerTeamID" : "UM45655NH2",
+    "_lastSynchronizedDate" : 703701956.14037299
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21321579",
+      "localizations" : [
+
+      ],
+      "name" : "Vokab Plus",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "48.0",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6447926036",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "1 Year Premium Access to Vokab Plus",
+              "displayName" : "Vokab Plus Access",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "vokab_plus_1y",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Vokab Plus",
+          "subscriptionGroupID" : "21321579",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "12.0",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6448000397",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "1 Month Premium Access to Vokab Plus",
+              "displayName" : "Vokab Plus Access",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "vokab_plus_1m",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Vokab Plus 1 M",
+          "subscriptionGroupID" : "21321579",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

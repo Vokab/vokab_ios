@@ -47,6 +47,8 @@ import {
   InterstitialAd,
 } from 'react-native-google-mobile-ads';
 import LoopLoader from '../components/screensComponents/loopLoader';
+import ExDiscover from '../components/loopComponents/exDiscover';
+import ExTest from '../components/loopComponents/exTest';
 
 const adUnitId = PRODUCTION ? Platform.OS === 'ios' ? ADMOB_INTERSTITIAL_IOS : ADMOB_INTERSTITIAL : TestIds.INTERSTITIAL;
 
@@ -67,13 +69,14 @@ const LoopManager = ({route, navigation}) => {
   const {isReady, loopStep, loopRoad, reviewBagArray, customBagArray,userTrackTransparency,euroConcent} =
   useSelector(mapState);
   const {isLoaded, isClosed, load, show} = useInterstitialAd(
-    PRODUCTION ? Platform.OS === 'ios' ? ADMOB_INTERSTITIAL_IOS : ADMOB_INTERSTITIAL : TestIds.INTERSTITIAL,
+    PRODUCTION ?  ADMOB_INTERSTITIAL_IOS : TestIds.INTERSTITIAL,
     {
       requestNonPersonalizedAdsOnly: !userTrackTransparency || !euroConcent,
     },
   );
   const realm = useRealm();
   const user = useQuery(User);
+  const isSubed = user[0].isPremium;
   const loop = useQuery(Loop);
   const words = useQuery(Word);
   const daysBags = useQuery(DaysBags);
@@ -85,7 +88,7 @@ const LoopManager = ({route, navigation}) => {
   let userUiLang = user[0].userUiLang;
   let userLearnedLang = user[0].userLearnedLang;
   let userNativeLang = user[0].userNativeLang;
-  const bagsOfYesterday = useQuery(DaysBags).filtered(`day == ${currentDay}`);
+  const bagsOfYesterday = useQuery(DaysBags).filtered(`day == ${currentDay - 1}`);
   const bagsOfLastWeek = useQuery(DaysBags).filtered(`week == ${currentWeek}`);
 
   let defaultWordsBag = loop[0].defaultWordsBag;
@@ -498,7 +501,7 @@ const LoopManager = ({route, navigation}) => {
           loop[0].defaultWordsBagRoad = road;
         });
       } else {
-        const road = await constructDef(defaultWordsBag, isDefaultDiscover, 0);
+        const road = await constructDef(defaultWordsBag, isDefaultDiscover, 0,isSubed);
         realm.write(() => {
           loop[0].defaultWordsBagRoad = road;
         });
@@ -591,6 +594,7 @@ const LoopManager = ({route, navigation}) => {
   };
 
   useEffect(() => {
+    if (!user[0].isPremium) {
     // Start loading the interstitial straight away
     console.log('isClosed =>', isClosed);
     console.log('show =>', show);
@@ -623,7 +627,7 @@ const LoopManager = ({route, navigation}) => {
           type: loopReduxTypes.UPDATE_LOOP_STATE,
         });
       }
-    }
+    }}
   }, [load, isLoaded, isClosed, show, loopStep]);
 
   return (
@@ -783,6 +787,32 @@ const LoopManager = ({route, navigation}) => {
                     <View style={{width: '100%', height: '100%'}}>
                       {/* <Text>Hello There {loopRoad[loopStep].screen}</Text> */}
                       <CardsImg
+                        loopType={idType}
+                        adShowing={adShowing}
+                        userUiLang={userUiLang}
+                        userLearnedLang={userLearnedLang}
+                        userNativeLang={userNativeLang}
+                      />
+                    </View>
+                  );
+                  case 13:
+                  return (
+                    <View style={{width: '100%', height: '100%'}}>
+                      {/* <Text>Hello There {loopRoad[loopStep].screen}</Text> */}
+                      <ExDiscover
+                        loopType={idType}
+                        adShowing={adShowing}
+                        userUiLang={userUiLang}
+                        userLearnedLang={userLearnedLang}
+                        userNativeLang={userNativeLang}
+                      />
+                    </View>
+                  );
+                case 14:
+                  return (
+                    <View style={{width: '100%', height: '100%'}}>
+                      {/* <Text>Hello There {loopRoad[loopStep].screen}</Text> */}
+                      <ExTest
                         loopType={idType}
                         adShowing={adShowing}
                         userUiLang={userUiLang}

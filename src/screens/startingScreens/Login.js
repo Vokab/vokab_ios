@@ -139,18 +139,22 @@ const Login = () => {
           currentWeek: 1,
           currentDay: 1,
           currentDate: newDate,
-          isPremium: false,
+          isPremium: userInfo ? userInfo.subscription.isSubed : false,
           serverId: id ? id : '',
           userName: userInfo ? userInfo.name : '',
           userUiLang: userInfo ? userInfo.userUiLang : 1,
           passedDays: [],
           notifToken: token,
           wordsDate: wordsDate,
+          endedAt: userInfo ? userInfo.subscription.endedAt : 0,
+          startedAt: userInfo ? userInfo.subscription.startedAt : 0,
+          type: userInfo ? userInfo.subscription.type : '',
         });
       });
       console.log('new user created:', user);
     } catch (err) {
       console.error('Failed to create the user', err.message);
+      setIsLoading(false);
     }
   };
 
@@ -168,6 +172,13 @@ const Login = () => {
             _id: item.id.toString(),
             wordNativeLang: item[userInfo.userNativeLang].word,
             wordLearnedLang: item[userInfo.userLearnedLang].word,
+            wordLearnedPhonetic: item[userInfo.userLearnedLang].phoentic,
+            wordNativeExample: item[userInfo.userNativeLang].example,
+            wordLearnedExample: item[userInfo.userLearnedLang].example,
+            exNativeIndex: item[userInfo.userNativeLang].exampleIndex,
+            exLearnedIndex: item[userInfo.userLearnedLang].exampleIndex,
+            exNativeLength: item[userInfo.userNativeLang].exampleLength,
+            exLearnedLength: item[userInfo.userLearnedLang].exampleLength,
             wordLevel: item.level,
             audioPath: destinationPath + '/' + item.id + '.mp3',
             remoteUrl: item[userInfo.userLearnedLang].audio,

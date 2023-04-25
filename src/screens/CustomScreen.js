@@ -59,7 +59,7 @@ const CustomScreen = () => {
   const words = useQuery(Word);
   const loop = useQuery(Loop);
   const myDaysBags = useQuery(DaysBags);
-  const isSubed = true;
+  const isSubed = user[0].isPremium;
   // isSubed = true;
   const customWords = useQuery(CustomWords)
     .sorted('passedDate', true)

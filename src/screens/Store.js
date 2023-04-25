@@ -7,6 +7,7 @@ import {
   ScrollView,
   ImageBackground,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ShadowEffect from '../../assets/shadowImg.png';
@@ -33,56 +34,83 @@ import {
   getAvailablePurchases,
   endConnection,
   acknowledgePurchaseAndroid,
+  setup,
+  requestSubscription
 } from 'react-native-iap';
 import Subs from '../components/screensComponents/inAppPurchase/sub';
+import {doc, updateDoc, getDoc} from 'firebase/firestore';
+import {db} from '../firebase/utils';
 
 const {useQuery, useObject, useRealm} = RealmContext;
 
 const subsIds = Platform.select({
-  ios: ['vokab_year', 'vokab_monthly'],
-  android: ['vokab_year', 'vokab_monthly'],
+  ios: ['vokab_plus_1y','vokab_plus_1m'],
 });
 
 let purchaseUpdatePurchase;
 let purchaseErrorPurchase;
 
 const Store = () => {
+  const realm = useRealm();
   const user = useQuery(User);
+
   const [subscription, setSubscription] = useState([]); //used to store list of subs
   const [products, setProducts] = useState([]);
   let userUiLang = user[0].userUiLang;
 
-  useEffect(() => {
+  const modifyUserToPremiumUser = async howManyMonths => {
+    const timestamp = new Date().getTime();
+    realm.write(() => {
+      user[0].isPremium = true;
+      user[0].endedAt = howManyMonths * 30 * 24 * 60 * 60 * 1000 + timestamp;
+      user[0].startedAt = timestamp;
+      user[0].type =
+        howManyMonths === 6
+          ? '6months'
+          : howManyMonths === 1
+          ? '1month'
+          : '1year';
+    });
+    if (user[0].serverId !== ''){
+      const userDocRef = doc(db, 'users', user[0].serverId);
+
+      console.log('timestamp =>', timestamp);
+      await updateDoc(userDocRef, {
+        isPremium: true,
+        subscription: {
+          endedAt: howManyMonths * 30 * 24 * 60 * 60 * 1000 + timestamp,
+          isSubed: true,
+          startedAt: timestamp,
+          type:
+            howManyMonths === 6
+              ? '6months'
+              : howManyMonths === 1
+              ? '1month'
+              : howManyMonths === 12
+              ? '1year'
+              : 'null',
+        },
+      }).catch(e => {
+        console.log('error on update user subscription', e);
+      });
+    }
+ 
+  };
+
+  useEffect( () => {
+
     initConnection()
+  
       .catch(e => {
         console.log('error connecting to store...', e);
       })
-      .then(a => {
+      .then(async (a) => {
         console.log('we are connected ', a);
-        flushFailedPurchasesCachedAsPendingAndroid()
-          .catch(() => {
-            // exception can happen here if:
-            // - there are pending purchases that are still pending (we can't consume a pending purchase)
-            // in any case, you might not want to do anything special with the error
-          })
-          .then(() => {
-            // Products
-            // getProducts({skus: productsIds})
-            //   .catch(() => {
-            //     console.log('error finding items');
-            //   })
-            //   .then(res => {
-            //     // console.log('we found items', res);
-            //     setProducts(res);
-            //   });
-            getSubscriptions({skus: subsIds})
-              .then(res => {
-                console.log('we found subss =>', res);
-                setSubscription(res);
-              })
-              .catch(() => {
-                console.log('error finding subs');
-              });
+         setup({storekitMode:'STOREKIT2_MODE'})
+            const mySubAre =  await getSubscriptions({skus: subsIds})
+            console.log('we found mySubAre =>', mySubAre);
+            setSubscription(mySubAre);
+      
             getPurchaseHistory()
               .catch(() => {})
               .then(res => {
@@ -91,17 +119,18 @@ const Store = () => {
                   const receiptSubs = res[res.length - 1].transactionReceipt;
                   if (receiptSubs) {
                     // giveHimSomething(receiptSubs);
+                    console.log('getPurchaseHistory')
                   }
                 } catch (error) {}
               });
-            getAvailablePurchases()
+/*             getAvailablePurchases()
               .catch(e => {
                 console.log('getAvailablePurchases error =>', e);
               })
               .then(res => {
                 console.log('getAvailablePurchases =>', res);
-              });
-          });
+              }); */
+        
       });
 
     purchaseErrorPurchase = purchaseErrorListener(error => {
@@ -115,46 +144,23 @@ const Store = () => {
     });
     purchaseUpdatePurchase = purchaseUpdatedListener(purchase => {
       const receipt = purchase.transactionReceipt;
+      console.log('we are here in receipt',receipt)
       if (receipt) {
         console.log('our purchase =>', purchase);
-        if (productsIds.includes(purchase.productId)) {
-          finishTransaction({purchase, isConsumable: true})
-            .then(() => {
-              switch (purchase.productId) {
-                case 'sidegame_android_coins_199':
-                  console.log('sidegame_android_coins_199', user.uid);
-                  dispatch(updateAddUserCoins(user.uid, 1200));
-                  break;
-                case 'sidegame_android_coins_799':
-                  console.log('sidegame_android_coins_799', user.uid);
-                  dispatch(updateAddUserCoins(user.uid, 3000));
-                  break;
-                case 'sidegame_android_coins_999':
-                  console.log('sidegame_android_coins_999', user.uid);
-                  dispatch(updateAddUserCoins(user.uid, 6500));
-                  break;
-                default:
-                  console.log('error in proccessing subscription');
-                  break;
-              }
-              console.log('Transaction Finished');
-            })
-            .catch(e => {
-              console.log('Transaction Not Success', e);
-            });
-        } else if (subsIds.includes(purchase.productId)) {
+          modifyUserToPremiumUser(6);
+       if (subsIds.includes(purchase.productId)) {
           finishTransaction({purchase, isConsumable: false})
-            .then(() => {
+            .then(async () => {
               console.log('Transaction Finished 238', purchase);
               switch (purchase.productId) {
-                case 'sidegame_android_sub_399_1m':
-                  modifyUserToPremiumUser(1);
+                case 'vokab_plus_1y':
+                  await modifyUserToPremiumUser(12);
                   break;
-                case 'sidegame_android_sub_1499_6m':
-                  modifyUserToPremiumUser(6);
+                case 'vokab_plus_6m':
+                  await  modifyUserToPremiumUser(6);
                   break;
-                case 'sidegame_android_sub_2399_1y':
-                  modifyUserToPremiumUser(12);
+                case 'vokab_plus_1m':
+                  await  modifyUserToPremiumUser(1);
                   break;
                 default:
                   console.log('error in proccessing subscription');
@@ -167,6 +173,8 @@ const Store = () => {
               console.log('Transaction Not Success', e);
             });
         }
+      }else{
+        console.log('error iap here')
       }
     });
 
@@ -212,18 +220,17 @@ const Store = () => {
             <View style={styles.iapParag}>
               <View>
                 <Text style={styles.iapParagTxt}>
-                  With the most practical and fun way to learn and memorize new
-                  words ,
+                 {languages[userUiLang].with_the_most}
                 </Text>
               </View>
               <Text style={styles.iapParagTxt}>
-                unlock all{' '}
+              {languages[userUiLang].unlock}{' '}
                 <Text style={styles.iapVokabInParagTxt}>Vokab Plus</Text>{' '}
-                features
+                {languages[userUiLang].feature}
               </Text>
             </View>
             <View style={styles.listFeatures}>
-              <View style={styles.singleFeature}>
+              <View style={[styles.singleFeature,{    flexDirection: userUiLang !== 0 ? 'row' : 'row-reverse',}]}>
                 <View style={styles.iconCircle}>
                   <FontAwesome
                     name={'check'}
@@ -233,10 +240,10 @@ const Store = () => {
                   />
                 </View>
                 <Text style={styles.singleFeatureTxt}>
-                  No ads, Nothing will stop you
+                {languages[userUiLang].no_ads}
                 </Text>
               </View>
-              <View style={styles.singleFeature}>
+                   <View style={[styles.singleFeature,{    flexDirection: userUiLang !== 0 ? 'row' : 'row-reverse',}]}>
                 <View style={styles.iconCircle}>
                   <FontAwesome
                     name={'check'}
@@ -246,10 +253,10 @@ const Store = () => {
                   />
                 </View>
                 <Text style={styles.singleFeatureTxt}>
-                  Examples of use-case with each word
+                {languages[userUiLang].examples}
                 </Text>
               </View>
-              <View style={styles.singleFeature}>
+              <View style={[styles.singleFeature,{    flexDirection: userUiLang !== 0 ? 'row' : 'row-reverse',}]}>
                 <View style={styles.iconCircle}>
                   <FontAwesome
                     name={'check'}
@@ -258,9 +265,9 @@ const Store = () => {
                     style={styles.streakImgStyle}
                   />
                 </View>
-                <Text style={styles.singleFeatureTxt}>More Training modes</Text>
+                <Text style={styles.singleFeatureTxt}> {languages[userUiLang].more}</Text>
               </View>
-              <View style={styles.singleFeature}>
+              <View style={[styles.singleFeature,{    flexDirection: userUiLang !== 0 ? 'row' : 'row-reverse',}]}>
                 <View style={styles.iconCircle}>
                   <FontAwesome
                     name={'check'}
@@ -270,10 +277,10 @@ const Store = () => {
                   />
                 </View>
                 <Text style={styles.singleFeatureTxt}>
-                  Adding images to custom words
+                {languages[userUiLang].add}
                 </Text>
               </View>
-              <View style={styles.singleFeature}>
+              <View style={[styles.singleFeature,{    flexDirection: userUiLang !== 0 ? 'row' : 'row-reverse',}]}>
                 <View style={styles.iconCircle}>
                   <FontAwesome
                     name={'check'}
@@ -283,7 +290,7 @@ const Store = () => {
                   />
                 </View>
                 <Text style={styles.singleFeatureTxt}>
-                  Adding examples to custom words
+                {languages[userUiLang].add_ex}
                 </Text>
               </View>
             </View>
@@ -291,50 +298,31 @@ const Store = () => {
         </ImageBackground>
         <View style={[styles.plansWrapper]}>
           {subscription?.map((mySub, index) =>
-            mySub.productId === 'vokab_year' ? (
+          //console.log("my sub is =>",mySub)
+            mySub.productId === 'vokab_plus_1y' ? (
               <Subs
                 key={index}
                 subscriptionOfferDetails={mySub.subscriptionOfferDetails}
                 subElement={mySub}
                 sku={mySub.productId}
-                period={'Yearly'}
-                price={'$ 3.99'}
               />
-            ) : null,
+            )  :   mySub.productId === 'vokab_plus_1m' ? (
+              <Subs
+                key={index}
+                subscriptionOfferDetails={mySub.subscriptionOfferDetails}
+                subElement={mySub}
+                sku={mySub.productId}
+              />
+            ) 
+            :null,
           )}
-          {/* <Subs /> */}
-          {/* <View style={[styles.planBox, styles.planSelected]}>
-            <View style={styles.absoBox}>
-              <Text style={styles.absoBoxTxt}>save 60%</Text>
-            </View>
-            <View style={styles.planBoxFst}>
-              <Text style={styles.planLengthTxt}>1 year plan</Text>
-              <Text style={styles.howMuchTxt}>$48 billed every year</Text>
-            </View>
-            <View style={styles.planBoxScnd}>
-              <Text style={styles.planLengthTxt}>4 /mo</Text>
-            </View>
-          </View> */}
 
-          <View style={[styles.planBox]}>
-            <View style={styles.planBoxFst}>
-              <Text style={styles.planLengthTxt}>Unlimited Plan</Text>
-              <Text style={styles.howMuchTxt}>$120 billed every year</Text>
-            </View>
-            {/* <View style={styles.planBoxScnd}>
-              <Text style={styles.planLengthTxt}>4 /mo</Text>
-            </View> */}
-          </View>
 
-          <View style={styles.planBox}>
-            <View style={styles.planBoxFst}>
-              <Text style={styles.planLengthTxt}>Monthly Plan</Text>
-              {/* <Text style={styles.howMuchTxt}>$48 billed every year</Text> */}
-            </View>
-            <View style={styles.planBoxScnd}>
-              <Text style={styles.planLengthTxt}>12 /mo</Text>
-            </View>
-          </View>
+
+        </View>
+        <View style={styles.cancelTextBox}>
+          <Text style={styles.cancelTextTitle}>Renewal Deactivation</Text>
+          <Text style={styles.cancelText}>any renewal will be invoiced within 24 hours following the end of the current period you can easily and at any time deactivate the automatic renewal: you will find the option to cancel or modify your subscription in the settings of your store account</Text>
         </View>
       </View>
     </ScrollView>
@@ -344,6 +332,21 @@ const Store = () => {
 export default Store;
 
 const styles = StyleSheet.create({
+  cancelTextTitle:{
+    color:'#ffff',
+    fontSize:18,
+    fontFamily:FONTS.enFontFamilyMedium,
+    marginBottom:10
+  },
+  cancelText:{
+    color:'#ffff',
+    fontSize:14,
+    
+  },
+  cancelTextBox:{
+    paddingHorizontal:15,
+    paddingBottom:10
+  },
   absoBoxTxt: {
     fontSize: 14,
     fontFamily: FONTS.enFontFamilyBold,
@@ -416,9 +419,10 @@ const styles = StyleSheet.create({
     color: COLORS_THEME.textWhite,
     fontSize: 16,
     fontFamily: FONTS.enFontFamilyMedium,
+    paddingHorizontal:10
   },
   singleFeature: {
-    flexDirection: 'row',
+
     // justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,

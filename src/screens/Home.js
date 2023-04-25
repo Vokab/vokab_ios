@@ -27,15 +27,22 @@ import {storage, db} from '../firebase/utils';
 import RNFetchBlob from 'rn-fetch-blob';
 import {getNewWords} from '../redux/Words/words.actions';
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency';
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import { setTrackTransparency, setUserConcent } from '../redux/UserRedux/userRedux.actions';
 import { AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
+import userReduxTypes from '../redux/UserRedux/userRedux.types';
 
 const {useQuery, useRealm} = RealmContext;
+
+const mapState = ({userRedux}) => ({
+  userSignUpSuccess: userRedux.userSignUpSuccess,
+  userSignInSuccess: userRedux.userSignInSuccess,
+});
 
 const Home = () => {
   const realm = useRealm();
   const dispatch = useDispatch()
+  const {userSignUpSuccess, userSignInSuccess} = useSelector(mapState);
   const user = useQuery(User);
   const daysBags = useQuery(DaysBags);
   const passedWords = useQuery(PassedWords);
@@ -187,6 +194,7 @@ if (consentInfo.status === AdsConsentStatus.OBTAINED){
               <DayCard
                 alreadyPassed={i < user[0].currentDay - 1}
                 isDailyTest={user[0].currentDay - 1 - i === 1}
+                userUiLang={user[0].userUiLang}
               />
             </View>
           </View>,
@@ -382,6 +390,16 @@ if (consentInfo.status === AdsConsentStatus.OBTAINED){
   let newDateVar = 2023;
   const passedDayss = [...user[0].passedDays];
   useEffect(() => {
+    if (userSignUpSuccess || userSignInSuccess) {
+      dispatch({
+        type: userReduxTypes.USER_SIGN_IN_SUCCESS,
+        payload: false,
+      });
+      dispatch({
+        type: userReduxTypes.USER_SIGN_UP_SUCCESS,
+        payload: false,
+      });
+    }
     // console.log('todayWork wordsBag =>', defaultWordsBag);
     checkIfThereIsNewWords();
     if (user[0].passedDays.length === 0) {

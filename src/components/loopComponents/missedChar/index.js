@@ -422,7 +422,7 @@ const MissedChar = props => {
           loop[0].isCustomDiscover = loop[0].isCustomDiscover + 1;
         });
       }
-      loopExit().then(navigation.navigate('Home'));
+      loopExit().then(navigation.navigate('Congratulation'));
     }
   };
 

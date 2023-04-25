@@ -41,6 +41,8 @@ import Login from './startingScreens/Login';
 import {RealmContext} from '../realm/models';
 import {User} from '../realm/models/User';
 import {languages} from '../../languages';
+import Congratulation from '../components/loopComponents/congratulation';
+
 import Store from './Store';
 const Tab = createBottomTabNavigator();
 const {useQuery, useRealm} = RealmContext;
@@ -154,7 +156,7 @@ const TabScreen = () => {
       />
       <Tab.Screen
         name="Store"
-        component={Test}
+        component={Store}
         options={{
           // tabBarStyle: {display: 'none'},
           tabBarLabel: `${languages[userUiLang].home.premium}`,
@@ -168,7 +170,7 @@ const TabScreen = () => {
             </View>
           ),
         }}
-      />
+      /> 
     </Tab.Navigator>
   );
 };

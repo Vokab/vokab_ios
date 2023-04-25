@@ -7,6 +7,7 @@ import {
   ScrollView,
   ImageBackground,
   Linking,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Thunder from '../../assets/thunder.png';
@@ -24,10 +25,35 @@ import {PassedWords} from '../realm/models/PassedWords';
 import {User} from '../realm/models/User';
 import {languages} from '../../languages';
 import {useNavigation} from '@react-navigation/native';
+import {
+  initConnection,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+  getProducts,
+  Product,
+  flushFailedPurchasesCachedAsPendingAndroid,
+  requestPurchase,
+  getPurchaseHistory,
+  finishTransaction,
+  getSubscriptions,
+  getAvailablePurchases,
+  endConnection,
+  acknowledgePurchaseAndroid,
+  setup,
+  requestSubscription
+} from 'react-native-iap';
 
 const {useQuery, useObject, useRealm} = RealmContext;
+const subsIds = Platform.select({
+  ios: ['vokab_plus_1y','vokab_plus_1m'],
+});
+
+let purchaseUpdatePurchase;
+let purchaseErrorPurchase;
 
 const Profile = () => {
+  const privacy_url="https://www.privacypolicies.com/live/a7ae8485-7d20-4189-a980-8cb6b4ab06e9";
+  const termsofuse_url="https://vokab-privacy.vercel.app/terms-of-use"
   const realm = useRealm();
   const navigation = useNavigation();
   const passedWords = useQuery(PassedWords);
@@ -58,6 +84,108 @@ const Profile = () => {
     console.log('createAcc start');
     navigation.navigate('Create');
   };
+
+  useEffect( () => {
+
+    initConnection()
+  
+      .catch(e => {
+        console.log('error connecting to store...', e);
+      })
+      .then(async (a) => {
+        console.log('we are connected ', a);
+         setup({storekitMode:'STOREKIT2_MODE'})
+            getPurchaseHistory()
+              .catch(() => {})
+              .then(res => {
+                // console.log('getPurchaseHistory =>', res);
+                try {
+                  const receiptSubs = res[res.length - 1].transactionReceipt;
+                  if (receiptSubs) {
+                    // giveHimSomething(receiptSubs);
+                    console.log('getPurchaseHistory')
+                  }
+                } catch (error) {}
+              });
+/*             getAvailablePurchases()
+              .catch(e => {
+                console.log('getAvailablePurchases error =>', e);
+              })
+              .then(res => {
+                console.log('getAvailablePurchases =>', res);
+              }); */
+        
+      });
+
+    purchaseErrorPurchase = purchaseErrorListener(error => {
+  
+    });
+    purchaseUpdatePurchase = purchaseUpdatedListener(purchase => {
+
+    });
+
+    return () => {
+      try {
+        purchaseUpdatePurchase.remove();
+      } catch (error) {
+        console.log('hello var ');
+      }
+      try {
+        purchaseErrorPurchase.remove();
+      } catch (error) {}
+      try {
+        endConnection();
+      } catch (error) {}
+    };
+  }, []);
+  const restorePurchaseForThisUser = async () => {
+    let howManyMonths = 12;
+    console.log(
+      'from restorePurchaseForThisUser we need to restore this purchase',
+    );
+    try {
+      const timestamp = new Date().getTime();
+      realm.write(() => {
+        user[0].isPremium = true;
+        user[0].endedAt = howManyMonths * 30 * 24 * 60 * 60 * 1000 + timestamp;
+        user[0].startedAt = timestamp;
+        user[0].type =
+          howManyMonths === 6
+            ? '6months'
+            : howManyMonths === 1
+            ? '1month'
+            : '1year';
+      });
+      Alert.alert("You're all set", 'Your purchase restored successfuly');
+    } catch (error) {}
+  };
+
+
+  const restorePurchase = () => {
+    console.log('restorePurchase start');
+ 
+try {
+  getAvailablePurchases()
+  .catch(e => {
+    console.log('getAvailablePurchases error =>', e);
+  })
+  .then(res => {
+    console.log('getAvailablePurchases =>', res);
+    if (res.length > 0) {
+      restorePurchaseForThisUser();
+      //Alert.alert('Ok lets restore');
+    } else {
+      //restorePurchaseForThisUser();
+      Alert.alert('Nothing to restore');
+    }
+  });
+
+} catch (error) {
+  console.log('w')
+}
+
+  };
+
   return (
     <ScrollView style={{felx: 1, width: '100%', backgroundColor: '#181920'}}>
       <View style={styles.screenWrapper}>
@@ -69,21 +197,23 @@ const Profile = () => {
           <View style={styles.createAccountBox}>
             <Feather name={'user'} size={40} color={'#fff'} />
             <Text style={styles.createAccBtnTxt}>
-              Create an account to save your learning
-              <Text style={styles.createAccTxt}> progress</Text>
+            {languages[userUiLang].profile.create_to_save}
             </Text>
             <TouchableOpacity
               style={styles.createAccBtn}
               onPress={() => {
                 createAcc();
               }}>
-              <Text style={styles.createAccBtnInTxt}>Create an account</Text>
+              <Text style={styles.createAccBtnInTxt}>{languages[userUiLang].profile.create}</Text>
             </TouchableOpacity>
           </View>
         )}
         {/* Vokab Premium Btn */}
+        {!user[0].isPremium && (
         <View style={styles.iapBtnProfile}>
-          <TouchableOpacity style={styles.iapBtn}>
+          <TouchableOpacity style={styles.iapBtn}    onPress={() => {
+                navigation.navigate('Store');
+              }}>
             <ImageBackground
               source={IapBg}
               resizeMode="cover"
@@ -93,7 +223,7 @@ const Profile = () => {
               <Image source={Premium} style={styles.premiumImage} />
             </ImageBackground>
           </TouchableOpacity>
-        </View>
+        </View>)}
         <ProfileCalendar userUiLang={userUiLang} />
         <View style={styles.statsBox}>
           {/* Straks Box */}
@@ -145,6 +275,15 @@ const Profile = () => {
           </View>
         </View>
         <View style={styles.actionsBox}>
+        <TouchableOpacity
+            style={[styles.actionBtn, styles.borderBtm]}
+            onPress={() => {
+              restorePurchase();
+            }}>
+            <Text style={styles.actionBtnTxt}>
+              {languages[userUiLang].profile.restore_purchase}
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.actionBtn, styles.borderBtm]}
             onPress={() => {
@@ -156,11 +295,16 @@ const Profile = () => {
               {languages[userUiLang].profile.contact_us}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionBtn]}>
+          <TouchableOpacity style={[styles.actionBtn, styles.borderBtm]} onPress={()=>{Linking.openURL(privacy_url)}}>
             <Text style={styles.actionBtnTxt}>
-              {languages[userUiLang].profile.rate_us}
+              Privacy policy
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> 
+        <TouchableOpacity style={[styles.actionBtn]} onPress={()=>{Linking.openURL(termsofuse_url)}} >
+            <Text style={styles.actionBtnTxt}>
+              Terms of use
+            </Text>
+          </TouchableOpacity> 
         </View>
       </View>
     </ScrollView>

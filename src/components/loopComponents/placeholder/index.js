@@ -310,7 +310,7 @@ const PlaceHolderComp = props => {
           loop[0].isCustomDiscover = loop[0].isCustomDiscover + 1;
         });
       }
-      loopExit().then(navigation.navigate('Home'));
+      loopExit().then(navigation.navigate('Congratulation'));
     }
   };
   const loopExit = async () => {
@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#707070',
     width: '80%',
-    left: 55,
+    left: 50,
     paddingVertical: 15,
   },
   foreignFlag: {

@@ -122,8 +122,8 @@ const Review = () => {
             <HintHeader
               text={
                 reviewWordsBagRoad.length > 0
-                  ? 'You are reviewing those words'
-                  : 'Add at least 6 words to start your review bag'
+                  ? `${languages[userUiLang].review.reviewing_now}`
+                  : `${languages[userUiLang].review.add_at_least}`
               }
             />
             {reviewWordsBagRoad.length !== 0
@@ -198,7 +198,7 @@ const Review = () => {
               <View>
                 <View style={styles.reviewBagHeader}>
                   <View style={styles.bagTitle}>
-                    <Text style={styles.bagTitleTxt}>Bag {index}</Text>
+                    <Text style={styles.bagTitleTxt}>{languages[userUiLang].review.bag} {index + 1}</Text>
                   </View>
                   <View style={styles.bagActions}>
                     <View style={styles.btnActionWrapper}>
@@ -207,7 +207,7 @@ const Review = () => {
                         onPress={() => {
                           reviewReadyBag(words);
                         }}>
-                        <Text style={styles.reviewBtnStyleTxt}>Review</Text>
+                        <Text style={styles.reviewBtnStyleTxt}>{languages[userUiLang].review.review} </Text>
                       </TouchableOpacity>
                       {/* <TouchableOpacity style={styles.closeBagStyle}>
                         <MaterialIcons
