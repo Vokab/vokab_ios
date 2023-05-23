@@ -12,8 +12,12 @@ import RNFetchBlob from 'rn-fetch-blob';
 import Realm from 'realm';
 
 // ------- NEW CLEAN CODE WITH REALM START HERE -------
-export const getNewWords = async dateVar => {
-  const q = query(collection(db, 'words'), where('wordDate', '==', dateVar));
+export const getNewWords = async (dateVar,level) => {
+  const q = query(
+    collection(db, 'words'),
+    where('wordDate', '==', dateVar),
+    where('level', '==', level),
+  );
   const ar = [];
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach(doc => {

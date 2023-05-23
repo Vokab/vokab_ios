@@ -47,6 +47,9 @@ const Home = () => {
   const daysBags = useQuery(DaysBags);
   const passedWords = useQuery(PassedWords);
   let userUiLang = user[0].userUiLang;
+  let userNativeLang = user[0].userNativeLang;
+  let userLearnedLang = user[0].userLearnedLang;
+  let userLevel = user[0].userLevel;
   const loop = useQuery(Loop);
   const words = useQuery(Word)
     .sorted('_id')
@@ -251,11 +254,18 @@ if (consentInfo.status === AdsConsentStatus.OBTAINED){
         realm.write(() => {
           realm.create('Word', {
             _id: item.id.toString(),
-            wordNativeLang: item[0].word,
-            wordLearnedLang: item[3].word,
+            wordNativeLang: item[userNativeLang].word,
+            wordLearnedLang: item[userLearnedLang].word,
+            wordLearnedPhonetic: item[userLearnedLang].phoentic,
+            wordNativeExample: item[userNativeLang].example,
+            wordLearnedExample: item[userLearnedLang].example,
+            exNativeIndex: item[userNativeLang].exampleIndex,
+            exLearnedIndex: item[userLearnedLang].exampleIndex,
+            exNativeLength: item[userNativeLang].exampleLength,
+            exLearnedLength: item[userLearnedLang].exampleLength,
             wordLevel: item.level,
             audioPath: destinationPath + '/' + item.id + '.mp3',
-            remoteUrl: item[3].audio,
+            remoteUrl: item[userLearnedLang].audio,
             wordImage: item.image,
             defaultDay: item.defaultDay,
             defaultWeek: item.defaultWeek,
@@ -295,7 +305,7 @@ if (consentInfo.status === AdsConsentStatus.OBTAINED){
     newWords.forEach(item => {
       let obj = {
         itemId: item.id.toString(),
-        url: item[3].audio,
+        url: item[userLearnedLang].audio,
       };
       ar.push(obj);
     });
@@ -329,7 +339,7 @@ if (consentInfo.status === AdsConsentStatus.OBTAINED){
     if (docSnap.exists()) {
       if (user[0].wordsDate < docSnap.data().dateInMs) {
         // ---- Here we need to update the words in this user app ----
-        const myData = await getNewWords(docSnap.data().dateInMs);
+        const myData = await getNewWords(docSnap.data().dateInMs,userLevel);
         // console.log('myData', myData[15]);
         await addNewWords(myData, docSnap.data().dateInMs);
         console.log(
@@ -346,7 +356,7 @@ if (consentInfo.status === AdsConsentStatus.OBTAINED){
   };
   const addDefaultWordsBag = () => {
     let arr = [];
-    const first3Words = words.slice(0, 12);
+    const first3Words = words.slice(0, 10);
     first3Words.forEach(elem => {
       // console.log('element =>', elem._id);
       arr.push(elem._id);
@@ -360,7 +370,7 @@ if (consentInfo.status === AdsConsentStatus.OBTAINED){
     let arr = [];
     let newDay = 0;
     let newWeek = 0;
-    const first3Words = words.slice(0, 12);
+    const first3Words = words.slice(0, 10);
     // console.log('first3Words =>', first3Words);
     first3Words.forEach(elem => {
       // console.log('element =>', elem._id);

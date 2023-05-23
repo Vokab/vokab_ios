@@ -154,9 +154,9 @@ export const constructDailyTest = async wordsPassedYesterday => {
   let result;
 
   const roadArray = [];
-  if (wordsPassedYesterday.length > 12) {
+  if (wordsPassedYesterday.length > 10) {
     const shuffledArray = wordsPassedYesterday.sort(() => 0.5 - Math.random()); // shuffles array
-    testArray = shuffledArray.slice(0, 12); // gets first n elements after shuffle
+    testArray = shuffledArray.slice(0, 10); // gets first n elements after shuffle
   }
   testArray.forEach(item => {
     if (item.wordType === 0) {
