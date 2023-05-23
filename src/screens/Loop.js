@@ -256,7 +256,7 @@ const LoopManager = ({route, navigation}) => {
             viewNbr: 0,
             prog: 0,
             wordType: defOrCustBag,
-            dayPlusWeekPassedAt: currentDay + currentWeek - 1,
+            dayPlusWeekPassedAt: currentDay + currentWeek,
             createDate: countOfThisDate,
           });
         });

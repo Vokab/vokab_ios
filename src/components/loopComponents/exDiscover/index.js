@@ -254,7 +254,7 @@ import {
         myWord.exLearnedLength + myWord.exLearnedIndex,
       );
       let afterWb = myWord.wordLearnedExample.substring(
-        myWord.exLearnedIndex + myWord.exNativeLength,
+        myWord.exLearnedIndex + myWord.exLearnedLength,
         myWord.wordLearnedExample.length,
       );
       // console.log('beforeWb =>', beforeWb);
